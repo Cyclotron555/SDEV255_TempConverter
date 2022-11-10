@@ -1,59 +1,81 @@
 window.addEventListener("DOMContentLoaded", domLoaded);
 
-function showImage(tempInF) {
-    if (tempInF < 32) {
-        weatherImage.src = "cold.png";
-    } else if (tempInF >= 32 && tempInF <= 50) {
-        weatherImage.src = "cool.png";
-    } else {
-        weatherImage.src = "warm.png";
-    }
-}
-
 function domLoaded() {
-    fInput.addEventListener("input", () => {
-        cInput.value = "";
-    })
-
+    // TODO: Complete the function
+    let convertButton = document.getElementById("convertButton");
+    let cInput = document.getElementById("cInput");
+    let fInput = document.getElementById("fInput");
+    let weatherImage = document.getElementById("weatherImage");
+    hideImage();
+    convertButton.addEventListener("click", convertTemperature);
     cInput.addEventListener("input", () => {
-        fInput.value = "";
-    })
-
-    convertButton.addEventListener("click", (e) => {
-        e.preventDefault();
-
-        if (fInput.value !== '') {
-            const tempInF = parseFloat(fInput.value);
-            if (isNaN(tempInF)) {
-                errorMessage.innerText = `${fInput.value} is not a number`;
-                errorMessage.style.color = "red";
-                return;
-            }
-            const tempInC = convertFtoC(tempInF);
-            cInput.value = tempInC;
-
-            showImage(tempInF);
-        } else if (cInput.value !== '') {
-            const tempInC = parseFloat(cInput.value);
-            if (isNaN(tempInC)) {
-                errorMessage.innerText = `${cInput.value} is not a number`;
-                errorMessage.style.color = "red";
-                return;
-            }
-            const tempInF = convertCtoF(tempInC);
-            fInput.value = tempInF;
-
-            showImage(tempInF);
+        if (fInput.value.length > 0) {
+            fInput.value = "";
         }
     })
+
+    fInput.addEventListener("input", () => {
+        if (cInput.value.length > 0) {
+            cInput.value = "";
+        }
+    })
+
+    function hideImage() {
+        weatherImage.style.display = "none";
+    }
+
 }
 
-
-function convertCtoF(degreesCelsius) {
-    return (degreesCelsius * 9 / 5 + 32);
+function convertCtoF(degreesCelcius) {
+    // TODO: Complete the function
+    return degreesCelcius * (9 / 5) + 32;
 }
-
 
 function convertFtoC(degreesFahrenheit) {
-    return ((degreesFahrenheit - 32) * 5 / 9);
+    // TODO: Complete the function
+    return (degreesFahrenheit - 32) * 5 / 9;
+}
+
+function convertTemperature() {
+    let cInput = document.getElementById("cInput");
+    let fInput = document.getElementById("fInput");
+    let weatherImage = document.getElementById("weatherImage");
+    let errorMessage = document.getElementById("errorMessage");
+    if (cInput.value.length > 0) {
+        if (checkErrorInput(cInput.value)) {
+            fInput.value = convertCtoF(parseFloat(cInput.value));
+            showImage(parseFloat(fInput.value));
+        }
+    } else if (fInput.value.length > 0) {
+        if (checkErrorInput(fInput.value)) {
+            cInput.value = convertFtoC(parseFloat(fInput.value));
+            showImage(parseFloat(fInput.value));
+        }
+    } else {
+        errorMessage.innerText = "please enter temperature";
+    }
+
+    function checkErrorInput(input) {
+        if (isNaN(parseFloat(input))) {
+            errorMessage.innerHTML = input + " is not a number";
+            return false;
+        } else {
+            errorMessage.innerHTML = "";
+            return true;
+        }
+    }
+
+    function showImage(degree) {
+        if (degree < 32) {
+            weatherImage.src = "cold.png";
+
+        } else if (degree >= 32 && degree <= 50) {
+            weatherImage.src = "cool.png";
+
+        } else {
+            weatherImage.src = "warm.png";
+        }
+        weatherImage.style.display = "block";
+
+    }
 }
